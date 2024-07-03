@@ -208,3 +208,12 @@ async def analyse_doc(file_id: int):
     return text
 
 
+@app.get('/application/Status')
+async def application_status():
+    """
+    Быстрая проверка ответа от сервера, если есть status: true
+    приложение работает нормально
+    """
+    return {
+        'status': True
+    }
