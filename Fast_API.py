@@ -217,14 +217,3 @@ async def application_status():
     return {
         'status': True
     }
-
-
-@app.get('/application/AbobaStatus')
-async def aboba_status():
-    """
-    Быстрая проверка ответа от программиста Абобы, если есть heartbeat: true
-    Абоба все ещё жив и все ок
-    """
-    return {
-        'heartbeat': True
-    }
