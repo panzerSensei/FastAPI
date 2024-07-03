@@ -1,0 +1,6 @@
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_task_store_errors_even_if_ignored = True
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

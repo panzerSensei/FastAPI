@@ -1,0 +1,78 @@
+version: "2.27.1"
+services:
+  postgres:
+    image: postgres:16.3
+    container_name: postgres_app
+    volumes:
+      - .:/postgres
+    command: -p 5432
+    expose:
+      - 5432
+    env_file:
+      - .env-non-dev
+    environment:
+      - POSTGRES_DB=SQLAlchemy_DB1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=300150497
+
+  redis:
+    image: redis:7.2.5
+    container_name: redis_app
+    volumes:
+      - .:/fastapi_app/redis
+    ports:
+      - "6380:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  app:
+    build:
+      context: ./
+    env_file:
+      - .env-non-dev
+    container_name: fastapi_app
+    volumes:
+      - .:/fastapi_app
+    command: uvicorn Fast_API:app --reload --host 0.0.0.0 --port 8000
+    ports:
+      - 9999:8000
+    depends_on:
+      - postgres
+      - redis
+
+  celery:
+    build:
+      context: ./
+    env_file:
+      - .env-non-dev
+    volumes:
+      - .:/fastapi_app/celery
+    container_name: celery_app
+    command: celery -A Fast_API:celery worker --loglevel=INFO --pool=solo
+    depends_on:
+      - redis
+
+  flower:
+    build:
+      context: ./
+    container_name: flower_app
+    command: celery --app=Fast_API:celery flower
+    ports:
+      - 8888:5555
+    volumes:
+      - .:/fastapi_app/flower
+    environment:
+      CELERY_BROKER_URL: redis://redis
+      CELERY_RESULT_BACKEND: redis://redis
+    depends_on:
+      - redis
+      - celery
+
+  migrate:
+    build:
+      context: .
+    restart: on-failure
+    container_name: alembic_app
+    command: alembic upgrade head
+    depends_on:
+      - postgres
