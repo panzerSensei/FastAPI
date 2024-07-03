@@ -215,5 +215,5 @@ async def application_status():
     приложение работает нормально
     """
     return {
-        'status': True
+        'status': "True"
     }
