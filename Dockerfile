@@ -7,8 +7,7 @@ WORKDIR /fastapi_app
 COPY requirements.txt .
 
 ENV PYHTONUNBUFFERED=1
-RUN apt-get update \
-  && apt-get -y install tesseract-ocr \
+RUN apt-get -y install tesseract-ocr \
   && apt-get -y install tesseract-ocr-rus
 
 RUN pip install --progress-bar off -r requirements.txt
