@@ -8,7 +8,7 @@ COPY requirements.txt .
 
 ENV PYHTONUNBUFFERED=1
 
-RUN pip install --progress-bar off -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
